@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minlength: [8, "Password 8 characters minimum"],
     },
-    role: { type: String, enum: ["user", "admin"],required: false, trim: true, default: "user" },
+    role: { type: String, enum: ["user", "admin"], required: false, trim: true, default: "user" },
     profileImg: { type: String, require: false, trim: true },
     // email: {
     //   type: String,

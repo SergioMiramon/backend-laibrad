@@ -7,7 +7,7 @@ const getUsers = async (req, res, next) => {
     const users = await User.find();
     return res.status(200).json(users);
   } catch (error) {
-    return next(error);
+    return next(new Error("Users not found"));
   }
 };
 
@@ -19,9 +19,6 @@ const registerUser = async (req, res, next) => {
         ? req.file.path
         : "https://www.cariri.com/wp-content/uploads/2021/08/person-placeholder.png",
     })
-    // const newUser = new User(req.body);
-    // const userExist = await User.findOne({ username: newUser.username });
-    // if (userExist) return next(new Error("User already exists"));
     await newUser.save();
     newUser.password = null;
     return res.status(201).json(newUser);
@@ -43,10 +40,10 @@ const loginUser = async (req, res, next) => {
         token: token,
       });
     } else {
-      return next(new Error("Password not valid"));
+      return next(new Error(""));
     }
   } catch (error) {
-    return next(error);
+    return next(new Error("Failing log in"));
   }
 };
 
@@ -55,7 +52,7 @@ const logoutUser = async (req, res, next) => {
     const token = null;
     return res.status(201).json(token);
   } catch (error) {
-    return next(error);
+    return next(new Error("Failing log out"));
   }
 };
 
