@@ -10,7 +10,7 @@ const { configCloudinary } = require("./src/middlewares/file.middleware")
 const server = express();
 server.use(
   cors({
-    origin: ["http://localhost:8080"],
+    origin: ["http://localhost:5173"],
   })
 );
 server.use(express.json());

@@ -12,7 +12,7 @@ const {
   deleteBook,
   updateBook,
 } = require("../controllers/books.controller");
-const isAuth = require("../../middlewares/auth.middleware");
+const { isAuth } = require("../../middlewares/auth.middleware");
 const { upload } = require("../../middlewares/file.middleware");
 
 const BookRouter = express.Router();

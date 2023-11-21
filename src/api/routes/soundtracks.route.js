@@ -11,7 +11,7 @@ const {
     deleteSoundtrack,
     updateSoundtrack,
 } = require("../controllers/soundtracks.controller")
-const isAuth = require("../../middlewares/auth.middleware")
+const { isAuth } = require("../../middlewares/auth.middleware")
 const { upload } = require("../../middlewares/file.middleware")
 const SoundtrackRouter = express.Router();
 

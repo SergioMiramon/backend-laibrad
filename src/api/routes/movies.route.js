@@ -26,7 +26,7 @@ const {
   updateMovie,
   deleteMovie,
 } = require("../controllers/movies.controller");
-const isAuth = require("../../middlewares/auth.middleware")
+const { isAuth } = require("../../middlewares/auth.middleware")
 const { upload } = require("../../middlewares/file.middleware");
 const coverUpload = upload.fields([
   {

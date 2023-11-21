@@ -6,14 +6,6 @@ const BookSchema = new mongoose.Schema(
     author: { type: String, required: true, trim: true },
     publisher: {
       type: String,
-      enum: [
-        "circulo rojo",
-        "planeta",
-        "tusquets",
-        "ediciones b",
-        "salamandra",
-        "reservoir books",
-      ],
       required: true,
       trim: true,
     },
@@ -23,8 +15,6 @@ const BookSchema = new mongoose.Schema(
     cover: {
       type: String,
       required: true,
-      default:
-        "https://res.cloudinary.com/dfhq3kjfl/image/upload/v1700076532/cyjdtsz4lc1yizgkozlp.png",
     },
   },
   {
