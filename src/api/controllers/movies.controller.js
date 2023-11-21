@@ -3,6 +3,62 @@ const { deleteImgCloudinary } = require("../../middlewares/file.middleware");
 
 const getMovies = async (req, res, next) => {
   try {
+
+    if (req.query.page && !isNaN(parseInt(req.query.page))) {
+      const numMovies = await Movie.countDocuments();
+      //---- Recogemos el número de pagina solicitada
+      let page = parseInt(req.query.page);
+      //---- Le indicamos el límite de elementos y que si no está indicado sea 10 por defecto
+      let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+      //---- Hacemos el calculo del numero de paginas que hay en base al limite y el total de numero de juegos en la colección
+      let numPages =
+        numMovies % limit > 0 ? numMovies / limit + 1 : numMovies / limit;
+      //---- Si la pagina es mayor que el número de paginas o menor que 1 la página sera por defecto 1.
+      console.log(numPages);
+      if (page > numPages || page < 1) {
+        page = 1;
+      }
+      //---- Definimos el skip para que inicie en el punto concreto de la colección
+      const skip = (page - 1) * limit;
+
+      //---- Haremos un .find() en el modelo de Juego que nos recogerá todos los juegos y los guardaremos en allmovies indicandole el skip y el limit definidos
+      const allmovies = await Movie.find().skip(skip).limit(limit);
+      //---- nuestra función nos devuelve (return) la respuesta (res) de nuestra función por lo tanto será un status(200) con nuestros juegos parseados a json y con la información de la paginación.
+      //----El campo next y prev se calcularán en base a la pagina que nos venga seteada indicando la url a la siguiente o null al no existir la pagina.
+      return res.status(200).json({
+        info: {
+          totalMovies: numMovies,
+          page: page,
+          limit: limit,
+          next:
+            numPages >= page + 1
+              ? `/movies?page=${page + 1}&limit=${limit}`
+              : null,
+          prev: page != 1 ? `/movies?page=${page - 1}&limit=${limit}` : null,
+        },
+
+        juegos: allmovies,
+      });
+    } else {
+      //----Definimos un limit por defecto para que nos muestre los 10 primeros juegos
+      const allmovies = await Movie.find().limit(10);
+      //---- Recogemos el número total de juegos
+      const numMovies = await Movie.countDocuments();
+
+      //----Va a mostrar si no se le indica por query la primera página con los 10 primeros juegos y el enlace a la siguiente pagina
+      return res.status(200).json({
+        info: {
+          totalMovies: numMovies,
+          page: 1,
+          limit: 10,
+          next: numMovies > 10 ? `/movies?page=2&limit=10` : null,
+          prev: null,
+        },
+
+        juegos: allmovies,
+      });
+    }
+
     const movies = await Movie.find();
     return res.status(200).json(movies);
   } catch (error) {
