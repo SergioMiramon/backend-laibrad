@@ -27,7 +27,7 @@ const getOthers = async (req, res, next) => {
               : null,
           prev: page != 1 ? `/others?page=${page - 1}&limit=${limit}` : null,
         },
-        juegos: allOthers,
+        data: allOthers,
       });
     } else {
       const allOthers = await Other.find().limit(10);
@@ -41,7 +41,7 @@ const getOthers = async (req, res, next) => {
           next: numOthers > 10 ? `/others?page=2&limit=10` : null,
           prev: null,
         },
-        juegos: allOthers,
+        data: allOthers,
       });
     }
   } catch (error) {

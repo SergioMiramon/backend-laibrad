@@ -27,7 +27,7 @@ const getMovies = async (req, res, next) => {
               : null,
           prev: page != 1 ? `/movies?page=${page - 1}&limit=${limit}` : null,
         },
-        juegos: allMovies,
+        data: allMovies,
       });
     } else {
       const allMovies = await Movie.find().limit(10);
@@ -41,7 +41,7 @@ const getMovies = async (req, res, next) => {
           next: numMovies > 10 ? `/movies?page=2&limit=10` : null,
           prev: null,
         },
-        juegos: allMovies,
+        data: allMovies,
       });
     }
   } catch (error) {

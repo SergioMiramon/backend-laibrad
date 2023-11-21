@@ -27,7 +27,7 @@ const getBooks = async (req, res, next) => {
               : null,
           prev: page != 1 ? `/books?page=${page - 1}&limit=${limit}` : null,
         },
-        juegos: allBooks,
+        data: allBooks,
       });
     } else {
       const allBooks = await Book.find().limit(10);
@@ -41,7 +41,7 @@ const getBooks = async (req, res, next) => {
           next: numBooks > 10 ? `/books?page=2&limit=10` : null,
           prev: null,
         },
-        juegos: allBooks,
+        data: allBooks,
       });
     }
   } catch (error) {

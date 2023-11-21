@@ -26,7 +26,7 @@ const getSoundtracks = async (req, res, next) => {
               : null,
           prev: page != 1 ? `/soundtracks?page=${page - 1}&limit=${limit}` : null,
         },
-        juegos: allSoundtracks,
+        data: allSoundtracks,
       });
     } else {
       const allSoundtracks = await Soundtrack.find().limit(10);
@@ -40,7 +40,7 @@ const getSoundtracks = async (req, res, next) => {
           next: numSoundtracks > 10 ? `/soundtracks?page=2&limit=10` : null,
           prev: null,
         },
-        juegos: allSoundtracks,
+        data: allSoundtracks,
       });
     }
   } catch (error) {

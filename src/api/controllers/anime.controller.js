@@ -27,7 +27,7 @@ const getAnimes = async (req, res, next) => {
               : null,
           prev: page != 1 ? `/animes?page=${page - 1}&limit=${limit}` : null,
         },
-        juegos: allAnimes,
+        data: allAnimes,
       });
     } else {
       const allAnimes = await Anime.find().limit(10);
@@ -41,7 +41,7 @@ const getAnimes = async (req, res, next) => {
           next: numAnimes > 10 ? `/animes?page=2&limit=10` : null,
           prev: null,
         },
-        juegos: allAnimes,
+        data: allAnimes,
       });
     }
   } catch (error) {
