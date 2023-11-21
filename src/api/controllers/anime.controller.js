@@ -3,8 +3,47 @@ const { deleteImgCloudinary } = require("../../middlewares/file.middleware");
 
 const getAnimes = async (req, res, next) => {
   try {
-    const animes = await Anime.find();
-    return res.status(200).json(animes);
+    if (req.query.page && !isNaN(parseInt(req.query.page))) {
+      const numAnimes = await Anime.countDocuments();
+      let page = parseInt(req.query.page);
+      let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+      let numPages =
+        numAnimes % limit > 0 ? numAnimes / limit + 1 : numAnimes / limit;
+      console.log(numPages);
+      if (page > numPages || page < 1) {
+        page = 1;
+      }
+      const skip = (page - 1) * limit;
+
+      const allAnimes = await Anime.find().skip(skip).limit(limit);
+      return res.status(200).json({
+        info: {
+          totalAnimes: numAnimes,
+          page: page,
+          limit: limit,
+          next:
+            numPages >= page + 1
+              ? `/animes?page=${page + 1}&limit=${limit}`
+              : null,
+          prev: page != 1 ? `/animes?page=${page - 1}&limit=${limit}` : null,
+        },
+        juegos: allAnimes,
+      });
+    } else {
+      const allAnimes = await Anime.find().limit(10);
+      const numAnimes = await Anime.countDocuments();
+
+      return res.status(200).json({
+        info: {
+          totalAnimes: numAnimes,
+          page: 1,
+          limit: 10,
+          next: numAnimes > 10 ? `/animes?page=2&limit=10` : null,
+          prev: null,
+        },
+        juegos: allAnimes,
+      });
+    }
   } catch (error) {
     return next(new Error("Animes not found"));
   }

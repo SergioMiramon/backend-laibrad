@@ -3,8 +3,47 @@ const { deleteImgCloudinary } = require("../../middlewares/file.middleware");
 
 const getBooks = async (req, res, next) => {
   try {
-    const books = await Book.find();
-    return res.status(200).json(books);
+    if (req.query.page && !isNaN(parseInt(req.query.page))) {
+      const numBooks = await Book.countDocuments();
+      let page = parseInt(req.query.page);
+      let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+      let numPages =
+        numBooks % limit > 0 ? numBooks / limit + 1 : numBooks / limit;
+      console.log(numPages);
+      if (page > numPages || page < 1) {
+        page = 1;
+      }
+      const skip = (page - 1) * limit;
+
+      const allBooks = await Book.find().skip(skip).limit(limit);
+      return res.status(200).json({
+        info: {
+          totalBooks: numBooks,
+          page: page,
+          limit: limit,
+          next:
+            numPages >= page + 1
+              ? `/books?page=${page + 1}&limit=${limit}`
+              : null,
+          prev: page != 1 ? `/books?page=${page - 1}&limit=${limit}` : null,
+        },
+        juegos: allBooks,
+      });
+    } else {
+      const allBooks = await Book.find().limit(10);
+      const numBooks = await Book.countDocuments();
+
+      return res.status(200).json({
+        info: {
+          totalBooks: numBooks,
+          page: 1,
+          limit: 10,
+          next: numBooks > 10 ? `/books?page=2&limit=10` : null,
+          prev: null,
+        },
+        juegos: allBooks,
+      });
+    }
   } catch (error) {
     return next(new Error("Books not found"));
   }

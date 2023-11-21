@@ -3,8 +3,47 @@ const { deleteImgCloudinary } = require("../../middlewares/file.middleware");
 
 const getOthers = async (req, res, next) => {
   try {
-    const others = await Other.find();
-    return res.status(200).json(others);
+    if (req.query.page && !isNaN(parseInt(req.query.page))) {
+      const numOthers = await Other.countDocuments();
+      let page = parseInt(req.query.page);
+      let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+      let numPages =
+        numOthers % limit > 0 ? numOthers / limit + 1 : numOthers / limit;
+      console.log(numPages);
+      if (page > numPages || page < 1) {
+        page = 1;
+      }
+      const skip = (page - 1) * limit;
+
+      const allOthers = await Other.find().skip(skip).limit(limit);
+      return res.status(200).json({
+        info: {
+          totalOthers: numOthers,
+          page: page,
+          limit: limit,
+          next:
+            numPages >= page + 1
+              ? `/others?page=${page + 1}&limit=${limit}`
+              : null,
+          prev: page != 1 ? `/others?page=${page - 1}&limit=${limit}` : null,
+        },
+        juegos: allOthers,
+      });
+    } else {
+      const allOthers = await Other.find().limit(10);
+      const numOthers = await Other.countDocuments();
+
+      return res.status(200).json({
+        info: {
+          totalOthers: numOthers,
+          page: 1,
+          limit: 10,
+          next: numOthers > 10 ? `/others?page=2&limit=10` : null,
+          prev: null,
+        },
+        juegos: allOthers,
+      });
+    }
   } catch (error) {
     return next(new Error("Others not found"));
   }

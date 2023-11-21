@@ -2,8 +2,47 @@ const Soundtrack = require("../models/soundtracks.model");
 
 const getSoundtracks = async (req, res, next) => {
   try {
-    const soundtracks = await Soundtrack.find();
-    return res.status(200).json(soundtracks);
+    if (req.query.page && !isNaN(parseInt(req.query.page))) {
+      const numSoundtracks = await Soundtrack.countDocuments();
+      let page = parseInt(req.query.page);
+      let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+      let numPages =
+        numSoundtracks % limit > 0 ? numSoundtracks / limit + 1 : numSoundtracks / limit;
+      console.log(numPages);
+      if (page > numPages || page < 1) {
+        page = 1;
+      }
+      const skip = (page - 1) * limit;
+
+      const allSoundtracks = await Soundtrack.find().skip(skip).limit(limit);
+      return res.status(200).json({
+        info: {
+          totalSoundtracks: numSoundtracks,
+          page: page,
+          limit: limit,
+          next:
+            numPages >= page + 1
+              ? `/soundtracks?page=${page + 1}&limit=${limit}`
+              : null,
+          prev: page != 1 ? `/soundtracks?page=${page - 1}&limit=${limit}` : null,
+        },
+        juegos: allSoundtracks,
+      });
+    } else {
+      const allSoundtracks = await Soundtrack.find().limit(10);
+      const numSoundtracks = await Soundtrack.countDocuments();
+
+      return res.status(200).json({
+        info: {
+          totalSoundtracks: numSoundtracks,
+          page: 1,
+          limit: 10,
+          next: numSoundtracks > 10 ? `/soundtracks?page=2&limit=10` : null,
+          prev: null,
+        },
+        juegos: allSoundtracks,
+      });
+    }
   } catch (error) {
     return next(new Error("Soundtracks not found"));
   }
