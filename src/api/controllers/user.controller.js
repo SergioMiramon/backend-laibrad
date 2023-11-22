@@ -13,19 +13,21 @@ const getUsers = async (req, res, next) => {
 
 const registerUser = async (req, res, next) => {
   try {
-    const newUser = new User({
-      ...req.body,
-      profileImg: req.file
-        ? req.file.path
-        : "https://res.cloudinary.com/dfhq3kjfl/image/upload/v1700640365/p2xaugegcfc0tvpzihnu.png",
-    })
-    console.log(newUser)
-    await newUser.save();
-    newUser.password = null;
-
+    const { username } = req.params
+    const user = await User.findById(username);
+    if ( !user ) {
+      const newUser = new User({
+        ...req.body,
+        profileImg: req.file
+          ? req.file.path
+          : "https://res.cloudinary.com/dfhq3kjfl/image/upload/v1700640365/p2xaugegcfc0tvpzihnu.png",
+      })
+      await newUser.save();
+      newUser.password = null;
+    }
     return res.status(201).json(newUser);
   } catch (error) {
-    return next(error);
+    return next(new Error("Failing register"));
   }
 };
 
