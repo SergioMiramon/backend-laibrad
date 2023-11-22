@@ -17,10 +17,12 @@ const registerUser = async (req, res, next) => {
       ...req.body,
       profileImg: req.file
         ? req.file.path
-        : "https://www.cariri.com/wp-content/uploads/2021/08/person-placeholder.png",
+        : "https://res.cloudinary.com/dfhq3kjfl/image/upload/v1700640365/p2xaugegcfc0tvpzihnu.png",
     })
+    console.log(newUser)
     await newUser.save();
     newUser.password = null;
+
     return res.status(201).json(newUser);
   } catch (error) {
     return next(error);
@@ -37,6 +39,7 @@ const loginUser = async (req, res, next) => {
       const token = generateToken(user._id, user.username);
       return res.status(200).json({
         username: user.username,
+        profileImg: user.profileImg,
         token: token,
       });
     } else {
