@@ -6,7 +6,7 @@ const getAnimes = async (req, res, next) => {
     if (req.query.page && !isNaN(parseInt(req.query.page))) {
       const numAnimes = await Anime.countDocuments();
       let page = parseInt(req.query.page);
-      let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+      let limit = req.query.limit ? parseInt(req.query.limit) : 15;
       let numPages =
         numAnimes % limit > 0 ? numAnimes / limit + 1 : numAnimes / limit;
       console.log(numPages);
@@ -30,15 +30,15 @@ const getAnimes = async (req, res, next) => {
         data: allAnimes,
       });
     } else {
-      const allAnimes = await Anime.find().limit(10);
+      const allAnimes = await Anime.find().limit(15);
       const numAnimes = await Anime.countDocuments();
 
       return res.status(200).json({
         info: {
           totalAnimes: numAnimes,
           page: 1,
-          limit: 10,
-          next: numAnimes > 10 ? `/animes?page=2&limit=10` : null,
+          limit: 15,
+          next: numAnimes > 15 ? `/animes?page=2&limit=15` : null,
           prev: null,
         },
         data: allAnimes,
