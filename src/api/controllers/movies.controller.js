@@ -62,7 +62,7 @@ const getMovieByID = async (req, res, next) => {
 const getMovieByTitle = async (req, res, next) => {
   try {
     const { title } = req.params;
-    const movie = await Movie.find({ title: title });
+    const movie = await Movie.findOne({ title: title });
     return res.status(200).json(movie);
   } catch (error) {
     return next(new Error("Movie by this title not found"));

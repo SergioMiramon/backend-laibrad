@@ -62,7 +62,7 @@ const getBookByID = async (req, res, next) => {
 const getBookByTitle = async (req, res, next) => {
   try {
     const { title } = req.params;
-    const book = await Book.find({ title: title });
+    const book = await Book.findOne({ title: title });
     return res.status(200).json(book);
   } catch (error) {
     return next(new Error("Book by this title not found"));

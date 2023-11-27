@@ -62,7 +62,7 @@ const getOtherByID = async (req, res, next) => {
 const getOtherByTitle = async (req, res, next) => {
   try {
     const { title } = req.params;
-    const other = await Other.find({ title: title });
+    const other = await Other.findOne({ title: title });
     return res.status(200).json(other);
   } catch (error) {
     return next(new Error("Other by this title not found"));

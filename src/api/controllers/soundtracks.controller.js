@@ -61,7 +61,7 @@ const getSoundtrackByID = async (req, res, next) => {
 const getSoundtrackByTitle = async (req, res, next) => {
   try {
     const { title } = req.params;
-    const soundtrack = await Soundtrack.find({ title: title });
+    const soundtrack = await Soundtrack.findOne({ title: title });
     return res.status(200).json(soundtrack);
   } catch (error) {
     return next(new Error("Soundtrack by this title not found"));

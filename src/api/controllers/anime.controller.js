@@ -62,7 +62,7 @@ const getAnimeByID = async (req, res, next) => {
 const getAnimeByTitle = async (req, res, next) => {
   try {
     const { title } = req.params;
-    const anime = await Anime.find({ title: title });
+    const anime = await Anime.findOne({ title: title });
     return res.status(200).json(anime);
   } catch (error) {
     return next(new Error("Anime by this title not found"));
