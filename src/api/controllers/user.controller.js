@@ -81,4 +81,15 @@ const logoutUser = async (req, res, next) => {
   }
 };
 
-module.exports = { getUsers, updateUser, registerUser, loginUser, logoutUser };
+const deleteUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const newUser = await User.findByIdAndDelete(id);
+    if (newUser.cover) deleteImgCloudinary(newUser.cover)
+    return res.status(200).json(newUser);
+  } catch (error) {
+    return next(new Error("Failed deleting user"));
+  }
+};
+
+module.exports = { getUsers, updateUser, registerUser, loginUser, logoutUser, deleteUser };
