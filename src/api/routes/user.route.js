@@ -8,7 +8,7 @@ const { upload } = require("../../middlewares/file.middleware");
 
 const UserRouter = express.Router();
 
-UserRouter.get("/userslogged", [isAdmin], getUsers)
+UserRouter.get("/userslogged", getUsers)
 UserRouter.patch("/updateuser/:id", [isAuth], upload.single("profileImg"), updateUser)
 UserRouter.post("/register", upload.single("profileImg") ,registerUser)
 UserRouter.post("/login", loginUser)
