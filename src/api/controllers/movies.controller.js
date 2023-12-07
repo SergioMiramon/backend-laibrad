@@ -6,7 +6,7 @@ const getMovies = async (req, res, next) => {
     if (req.query.page && !isNaN(parseInt(req.query.page))) {
       const numMovies = await Movie.countDocuments();
       let page = parseInt(req.query.page);
-      let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+      let limit = req.query.limit ? parseInt(req.query.limit) : 200;
       let numPages =
         numMovies % limit > 0 ? numMovies / limit + 1 : numMovies / limit;
       console.log(numPages);
@@ -30,15 +30,15 @@ const getMovies = async (req, res, next) => {
         data: allMovies,
       });
     } else {
-      const allMovies = await Movie.find().limit(10);
+      const allMovies = await Movie.find().limit(200);
       const numMovies = await Movie.countDocuments();
 
       return res.status(200).json({
         info: {
           totalMovies: numMovies,
           page: 1,
-          limit: 10,
-          next: numMovies > 10 ? `/movies?page=2&limit=10` : null,
+          limit: 200,
+          next: numMovies > 200 ? `/movies?page=2&limit=200` : null,
           prev: null,
         },
         data: allMovies,

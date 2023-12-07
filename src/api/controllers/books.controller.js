@@ -6,7 +6,7 @@ const getBooks = async (req, res, next) => {
     if (req.query.page && !isNaN(parseInt(req.query.page))) {
       const numBooks = await Book.countDocuments();
       let page = parseInt(req.query.page);
-      let limit = req.query.limit ? parseInt(req.query.limit) : 15;
+      let limit = req.query.limit ? parseInt(req.query.limit) : 30;
       let numPages =
         numBooks % limit > 0 ? numBooks / limit + 1 : numBooks / limit;
       console.log(numPages);
@@ -30,15 +30,15 @@ const getBooks = async (req, res, next) => {
         data: allBooks,
       });
     } else {
-      const allBooks = await Book.find().limit(15);
+      const allBooks = await Book.find().limit(30);
       const numBooks = await Book.countDocuments();
 
       return res.status(200).json({
         info: {
           totalBooks: numBooks,
           page: 1,
-          limit: 15,
-          next: numBooks > 15 ? `/books?page=2&limit=15` : null,
+          limit: 30,
+          next: numBooks > 30 ? `/books?page=2&limit=30` : null,
           prev: null,
         },
         data: allBooks,

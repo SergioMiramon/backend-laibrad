@@ -5,7 +5,7 @@ const getSoundtracks = async (req, res, next) => {
     if (req.query.page && !isNaN(parseInt(req.query.page))) {
       const numSoundtracks = await Soundtrack.countDocuments();
       let page = parseInt(req.query.page);
-      let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+      let limit = req.query.limit ? parseInt(req.query.limit) : 30;
       let numPages =
         numSoundtracks % limit > 0 ? numSoundtracks / limit + 1 : numSoundtracks / limit;
       console.log(numPages);
@@ -29,15 +29,15 @@ const getSoundtracks = async (req, res, next) => {
         data: allSoundtracks,
       });
     } else {
-      const allSoundtracks = await Soundtrack.find().limit(10);
+      const allSoundtracks = await Soundtrack.find().limit(30);
       const numSoundtracks = await Soundtrack.countDocuments();
 
       return res.status(200).json({
         info: {
           totalSoundtracks: numSoundtracks,
           page: 1,
-          limit: 10,
-          next: numSoundtracks > 10 ? `/soundtracks?page=2&limit=10` : null,
+          limit: 30,
+          next: numSoundtracks > 30 ? `/soundtracks?page=2&limit=30` : null,
           prev: null,
         },
         data: allSoundtracks,
